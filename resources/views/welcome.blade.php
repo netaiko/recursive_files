@@ -105,13 +105,14 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </nav>
-
-        @foreach($nodes as $node)
-            <div><span class="path">{{$node->route}}</span></div>
-        @endforeach
-
-        @if($search && empty($nodes))
+        @if($search && empty($paths))
             <div><span class="path">No results found for <b>{{$search}}</b></span></div>
+        @else
+
+            @foreach($paths as $path)
+                <div><span class="path">{{$path}}</span></div>
+            @endforeach
+
         @endif
 
 

@@ -11,10 +11,12 @@ class NodeController extends Controller
 {
     private $search;
     private $nodes_found;
+    private $paths_found;
 
     public function __construct()
     {
         $this->nodes_found = [];
+        $this->paths_found = [];
     }
 
 
@@ -25,14 +27,13 @@ class NodeController extends Controller
     {
         $root = Node::whereNull('parent_id')->first();
 
-        $this->search = $request->search;
-
-
-        $this->dfs($root);
+        if ($this->search = $request->search) {
+            $this->dfs($root);
+        }
 
         return view('welcome')
             ->with([
-                'nodes' => $this->nodes_found, 'search' => $request->search]);
+                'paths' => $this->paths_found, 'search' => $request->search]);
     }
 
 
@@ -42,14 +43,16 @@ class NodeController extends Controller
      * @param Node $node
      * @return Node
      */
-    function dfs(Node $node)
+    function dfs(Node $node, $path = '')
     {
+        $path .= empty($path) ? $node->name : "\\$node->name";
         if ($node->isSimilarName($this->search)) {
             $this->nodes_found[] = $node;
+            $this->paths_found[] = $path;
         }
 
         foreach ($node->children as $child) {
-            $this->dfs($child);
+            $this->dfs($child, $path);
         }
         return $node;
     }
