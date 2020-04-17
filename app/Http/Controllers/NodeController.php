@@ -26,8 +26,10 @@ class NodeController extends Controller
     function index(Request $request)
     {
         $root = Node::whereNull('parent_id')->first();
+        $this->search = $request->search;
 
-        if ($this->search = $request->search) {
+        if ($root && $this->search
+        ) {
             $this->dfs($root);
         }
 
